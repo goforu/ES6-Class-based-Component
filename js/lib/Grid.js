@@ -3,7 +3,7 @@
  */
 var Grid = (()=> {
 
-    //私有属性
+    //私有属性key
     let _store = Symbol();
     let _columns = Symbol();
     let _title = Symbol();

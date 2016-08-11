@@ -10,6 +10,7 @@ var View = (()=> {
 
         init() {
             this.render();
+            this.bindEvents && this.bindEvents();
         }
 
         show() {

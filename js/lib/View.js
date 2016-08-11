@@ -1,32 +1,23 @@
 /**
  * Created by goforu on 2016/8/10.
  */
-(function () {
-    "use strict";
+var View = (()=> {
+    return class View {
 
-    const template = '';
+        constructor() {
+            //this.init();
+        }
 
-    //View构造函数
-    const View = title => {
-        this.title = title;
-        this.init();
-    };
+        init() {
+            this.render();
+        }
 
-    View.prototype.init = ()  => {
-        this.render();
-    };
+        show() {
+            this.dom.style.display = 'none';
+        }
 
-    View.prototype.render = () => {
-
-    };
-
-    View.prototype.show = () => {
-
-    };
-
-    View.prototype.hide = () => {
-
-    };
-
-    export default View;
+        hide() {
+            this.dom.style.display = '';
+        }
+    }
 })();

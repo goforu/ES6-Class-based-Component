@@ -14,11 +14,11 @@ var View = (()=> {
         }
 
         show() {
-            this.dom.style.display = 'none';
+            this.node.style.display = 'none';
         }
 
         hide() {
-            this.dom.style.display = '';
+            this.node.style.display = '';
         }
     }
 })();

@@ -3,6 +3,8 @@
  */
 var Store = (()=> {
 
+    'use strict';
+
     let _rawDataArr = Symbol();//原始数据
     let _sortedDataArr = Symbol();//排序后数据
 
@@ -24,7 +26,11 @@ var Store = (()=> {
             return this[_sortedDataArr].slice(index * unit, (index + 1) * unit);
         }
 
-        //获取最大页数
+        /**
+         * 获取数据页数
+         * @param unit 每页最大行数
+         * @returns {number} 页数
+         */
         getMaxUnitNum(unit = 10/*number*/) {
             return Math.ceil(this[_sortedDataArr].length / unit);
         }
@@ -56,33 +62,30 @@ var Store = (()=> {
 
         /**
          * 各列优先级顺序排序
-         * @param colArr 排序列，优先级从左到右，格式为[{2:true},{1:false},...]
+         * @param sortOpts 排序列，优先级从左到右，格式为[{2:true},{1:false},...]
          */
-        sortByColumns(colArr) {
+        sortByColumns(sortOpts) {
             //清空数据
             this[_sortedDataArr].splice(0, this[_sortedDataArr].length);
             //将数据替换为排序后数据
-            for (let item of this._sortByColumn(colArr, 0, this[_rawDataArr])) {
-                this[_sortedDataArr].push(item);
-            }
-
+            this[_sortedDataArr].push(...this._sortByColumn(sortOpts, 0, this[_rawDataArr]));
         }
 
         /**
          * 递归，依据优先级排序
-         * @param colArr 排序列，优先级从左到右，格式为[{2:true},{1:false},...]
+         * @param sortOpts 排序列，优先级从左到右，格式为[{2:true},{1:false},...]
          * @param current 当前排序的优先级位
          * @param arrs 待排序数组
          * @returns {*} 排序完成数组
          * @private
          */
-        _sortByColumn(colArr = [], current = 0, arrs = []) {
+        _sortByColumn(sortOpts = [], current = 0, arrs = []) {
             //如果超出排序列，说明不需要排序了，直接返回。
-            if (current >= colArr.length) return arrs;
+            if (current >= sortOpts.length) return arrs;
             //找到对应排序列
-            let colIndex = Object.keys(colArr[current])[0];
+            let colIndex = Object.keys(sortOpts[current])[0];
             //排序规则
-            let isDec = colArr[current][colIndex];
+            let isDec = sortOpts[current][colIndex];
             //排序结果
             let resultArr = [];
 
@@ -90,10 +93,13 @@ var Store = (()=> {
             let map = {};
 
             for (let i = 0; i < arrs.length; i++) {
+                //第i行colIndex列cell的value值当做key排序
                 let key = arrs[i][colIndex] || '';
                 if (map[key] === undefined) {
+                    //该值首次出现
                     map[key] = [i];
                 } else {
+                    //再次出现，压入，待下一次排序（规则决定是否再次细排）
                     map[key].push(i);
                 }
             }
@@ -104,13 +110,19 @@ var Store = (()=> {
 
             for (let key of keys) {
                 let sortedArrs = [];
+                //将本次同等序列数据提取出来
                 for (let index of map[key]) {
                     sortedArrs.push(arrs[index]);
                 }
                 //送往下一级排序
-                resultArr = resultArr.concat(this._sortByColumn(colArr, current + 1, sortedArrs));
+                resultArr.push(...this._sortByColumn(sortOpts, current + 1, sortedArrs));
             }
             return resultArr;
+        }
+
+        destory(){
+            this[_rawDataArr] = null;
+            this[_sortedDataArr] = null;
         }
     }
 

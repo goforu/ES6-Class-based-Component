@@ -1,0 +1,90 @@
+/*grid*/
+.grid {
+    display: inline-block;
+}
+
+.grid table {
+    border: solid 1px;
+}
+
+.grid table > thead {
+    background-color: black;
+    color: white;
+}
+
+.grid table > tbody {
+    min-height: 300px;
+}
+
+.grid table > thead > tr > th {
+    position: relative;
+    text-align: center;
+    padding: 5px 3px 5px 3px;
+}
+
+.grid table > thead > tr > th:hover {
+    cursor: pointer;
+}
+
+.grid table > thead > tr > th.up-sort:after {
+    content: '';
+    position: absolute;
+    display: block;
+    border-top: 4px solid white;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    left: 50%;
+    margin-left: -4px;
+    bottom: 2px;
+}
+
+.grid table > thead > tr > th.down-sort:before {
+    content: '';
+    position: absolute;
+    display: block;
+    border-bottom: 4px solid white;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    left: 50%;
+    margin-left: -4px;
+    top: 2px;
+}
+
+/*PagingGrid*/
+.paging-grid{
+    float: right;
+}
+
+.paging-grid > a.paging-up {
+    margin: 0 2px 0 4px;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid black;
+    display: inline-block;
+}
+
+.paging-grid > a.paging-down {
+    margin: 0 4px 0 2px;
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid black;
+    border-top: 7px solid transparent;
+    display: inline-block;
+}
+
+.paging-grid > a.paging-up.disable {
+    border-right-color: #a7a7a7;
+    cursor: not-allowed;
+}
+
+.paging-grid > a.paging-down.disable {
+    border-left-color: #a7a7a7;
+    cursor: not-allowed;
+}
+
+.paging-grid > input{
+     width: 20px;
+ }
+
+.paging-grid > input.error{
+    border: 1px solid #ff2a2e;
+}

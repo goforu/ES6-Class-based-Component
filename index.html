@@ -27,6 +27,13 @@
 <div id="instruction">
     <h2>前言</h2>
     <p>组件位于js/lib加css共5个文件，个人觉得写得还算规范，基本功能都有，耦合性也挺低。（Demo页面图方便，写得比较随意）你可以在main.js里改变一些参数配置，再试试效果。:P</p>
+    <ul>
+        <li><strong>View：</strong>Grid和PagingGrid的父类，定义了基本的属性和方法，以及生命周期。</li>
+        <li><strong>Grid：</strong>View的子类，本组件的中枢。</li>
+        <li><strong>PagingGrid：</strong>View的子类，负责记录页码状态和自身显示逻辑。</li>
+        <li><strong>Store：</strong>数据仓库，依据Grid的需求，将原始数据进行加工（分页、排序、查询）。</li>
+        <li><strong>SortSwitcher：</strong>Grid中定义的小工具。生成和记录Grid与页面交互的排序规则。</li>
+ </ul>
     <h3>刷新（Load）</h3>
     <button onclick="loadGridData()">刷新</button>
     <p>点击刷新按钮，重新生成100条数据，传入store仓库，随后grid重新渲染。</p>
@@ -36,10 +43,10 @@
     <p>点击<strong>列名</strong>即可排序。（会出现小三角）支持升序和降序和多列排序，多次点击切换排序规则或取消排序，排序优先级从第一次
         <strong>点击列</strong>到最后一次<strong>点击列</strong>递减，所以想要改变优先级别忘了把其他“小三角”去掉。（注：因为考虑到可能有字母或中文，排序规则为字符串排序，并非数字排序）
     </p>
-    <h3>分页</h3>
-    <p>点击组件右下小三角或直接输入页码。</p>
     <h3>隐藏&显示</h3>
     <button onclick="toggleShowHide()" >隐藏OR显示</button>
+    <h3>分页</h3>
+    <p>点击组件右下小三角或直接输入页码。</p>
     <h3>销毁</h3>
     <button onclick="destroyGrid()">销毁</button>
     <p>销毁后，对象属性不存在了。再点其他方法会报错。</p>

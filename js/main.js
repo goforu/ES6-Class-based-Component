@@ -11,7 +11,7 @@ let grid = new Grid({
     classes: 'widget',//类名，多个用空格隔开
     columns: ["列1", "列2", "列3", "列4", "列5", "列6"],//列名
     store,//数据仓库
-    maxRows: 10,//每页最大行数
+    maxRows: 10,//每页最大行数,默认为0表示全部
     isMark: true,//是否显示序列号
     title: 'ES6 UI DEMO',//标题
     style: {//样式

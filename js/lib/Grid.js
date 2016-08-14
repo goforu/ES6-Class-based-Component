@@ -75,7 +75,7 @@ var Grid = (()=> {
          * @param maxRows 一页最大行数
          * @param isMark 是否显示列序号
          */
-        constructor({classes, id, title, style, columns, store = new Store(), maxRows = 10, isMark = false}) {
+        constructor({classes, id, title, style, columns, store = new Store(), maxRows = 0, isMark = false}) {
             //调用父级构造函数
             super({classes, id, title, style});
             //校验
@@ -262,7 +262,7 @@ var Grid = (()=> {
             this.pagingGrid.destory();
             this.pagingGrid = null;
 
-            this[_store].destory();
+            //this[_store].destory();
             this[_store] = null;
             this[_columns] = null;
             this[_maxRows] = null;

@@ -27,12 +27,12 @@ var Store = (()=> {
         }
 
         /**
-         * 获取数据页数
+         * 获取数据页数，0表示全部
          * @param unit 每页最大行数
          * @returns {number} 页数
          */
-        getMaxUnitNum(unit = 10/*number*/) {
-            return Math.ceil(this[_resultDataArr].length / unit);
+        getMaxUnitNum(unit = 0/*number*/) {
+            return unit === 0 ? 1 : Math.ceil(this[_resultDataArr].length / unit);
         }
 
         /**

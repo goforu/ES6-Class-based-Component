@@ -38,12 +38,12 @@
     <button onclick="loadGridData()">刷新</button>
     <p>点击刷新按钮，重新生成100条数据，传入store仓库，随后grid重新渲染。</p>
     <h3>搜索（Search）</h3>
-    点击组件左下角开始搜索。规则是：一行中只要有任意一列的<strong>前缀</strong>包含所查字符，就算是查询到了。</p>
+    <p>点击组件左下角开始搜索。规则是：一行中只要有任意一列的<strong>前缀</strong>包含所查字符，就算是查询到了。</p>
     <h3>排序</h3>
     <p>点击<strong>列名</strong>即可排序。（会出现小三角）支持升序和降序和多列排序，多次点击切换排序规则或取消排序，排序优先级从第一次
         <strong>点击列</strong>到最后一次<strong>点击列</strong>递减，所以想要改变优先级别忘了把其他“小三角”去掉。（注：因为考虑到可能有字母或中文，排序规则为字符串排序，并非数字排序）
     </p>
-    <h3>隐藏&显示</h3>
+    <h3>隐藏或显示</h3>
     <button onclick="toggleShowHide()" >隐藏OR显示</button>
     <h3>分页</h3>
     <p>点击组件右下小三角或直接输入页码。</p>
@@ -55,7 +55,7 @@
 <script src="js/lib/View.js" type="text/javascript"></script>
 <script src="js/lib/Grid.js" type="text/javascript"></script>
 <script src="js/lib/PagingGrid.js" type="text/javascript"></script>
-<script src="js/lib/store.js" type="text/javascript"></script>
+<script src="js/lib/Store.js" type="text/javascript"></script>
 <script src="js/main.js" type="text/javascript"></script>
 </body>
 </html>

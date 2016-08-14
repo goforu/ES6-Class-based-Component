@@ -4,7 +4,10 @@
 }
 
 .grid table {
-    border: solid 1px;
+    table-layout: fixed;
+    min-width: 300px;
+    border-collapse: collapse;
+    border: 1px solid;
 }
 
 .grid table > thead {
@@ -12,14 +15,37 @@
     color: white;
 }
 
-.grid table > tbody {
+.grid table > caption{
+    padding:10px;
+}
+
+.grid table > tbody > tr {
+    border-bottom: 1px solid gray;
+}
+
+.grid table > tbody > tr > td {
+    text-align: center;
+    padding: 5px 10px 5px 10px;
+}
+
+.grid table > tbody > tr > td.empty {
     min-height: 300px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.grid.marked table > tbody > tr > td:nth-child(1) {
+    border-right: 1px solid;
+}
+
+.grid.marked table > thead > tr > th:nth-child(1) {
+    border-right: 1px solid white;
 }
 
 .grid table > thead > tr > th {
     position: relative;
     text-align: center;
-    padding: 5px 3px 5px 3px;
+    padding: 8px 10px 8px 10px;
 }
 
 .grid table > thead > tr > th:hover {
@@ -50,8 +76,41 @@
     top: 2px;
 }
 
+.grid input[type="text"] {
+    background-color: transparent;
+    padding: 5px;
+    border: none;
+    /*border-bottom: solid 2px #c9c9c9;*/
+    min-width: 0;
+    transition: border 0.3s;
+}
+
+.grid input[type="text"]:focus {
+    outline: none;
+    /*border-bottom: solid 2px #969696;*/
+}
+
+.grid input[type="text"].error {
+    outline: none;
+    border: none;
+    border-bottom: solid 2px red;
+}
+
+.grid > div {
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+    border-left: 1px solid;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    background-color: white;
+}
+
+.grid > div > button {
+
+}
+
 /*PagingGrid*/
-.paging-grid{
+.paging-grid {
     float: right;
 }
 
@@ -81,10 +140,11 @@
     cursor: not-allowed;
 }
 
-.paging-grid > input{
-     width: 20px;
- }
+.paging-grid > input[type="number"] {
+    width: 40px;
+    margin-right: 3px;
+}
 
-.paging-grid > input.error{
-    border: 1px solid #ff2a2e;
+.paging-grid > input.error {
+    border: 1px solid red;
 }

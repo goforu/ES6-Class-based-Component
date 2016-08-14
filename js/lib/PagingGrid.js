@@ -12,26 +12,32 @@ var PagingGrid = (()=> {
     let _preEl = Symbol();//上一页
     let _nextEl = Symbol();//下一页
     let _toPageEl = Symbol();//输入框
-    let _goEl = Symbol();//go按钮
+    //let _goEl = Symbol();//go按钮
 
     const cls = 'paging-grid';
 
     return class PagingGrid extends View {
 
-        constructor(grid) {
-            super({});
+        /**
+         * 构造函数
+         * @param options
+         */
+        constructor(options) {
+            super(options);
             //模板
             this._template = '<span></span><a href="javascript:void(0)" class="paging-up"></a>' +
-                '<a href="javascript:void(0)" class="paging-down"></a><input type="text"><button>Go</button>';
+                '<a href="javascript:void(0)" class="paging-down"></a><input type="number" placeholder="页码">';
             //传入所属grid
             this.addClasses(cls);
-            this.grid = grid;
+            this.grid = options.grid;
             this[_currentPage] = 0;
             this[_pageNum] = 1;
             this.init();
         }
 
-        //渲染
+        /**
+         * 渲染
+         */
         render() {
             super.render();
             //页数
@@ -39,46 +45,51 @@ var PagingGrid = (()=> {
             //上一页或下一页是否置灰
             this[_currentPage] == 0 ? this[_preEl].classList.add('disable') : this[_preEl].classList.remove('disable');
             this[_currentPage] == this[_pageNum] - 1 ? this[_nextEl].classList.add('disable') : this[_nextEl].classList.remove('disable');
+            //页数constraint
+            this[_toPageEl].setAttribute('min','1');
+            this[_toPageEl].setAttribute('max',this[_pageNum]);
         }
 
-        //缓存dom避免使用时再找，浪费资源
+        /**
+         * 缓存dom避免使用时再找，浪费资源
+         * @private
+         */
         _cacheDoms() {
             super._cacheDoms();
             this[_pageStateEl] = this.container.getElementsByTagName('span')[0];
             this[_preEl] = this.container.getElementsByTagName('a')[0];
             this[_nextEl] = this.container.getElementsByTagName('a')[1];
             this[_toPageEl] = this.container.getElementsByTagName('input')[0];
-            this[_goEl] = this.container.getElementsByTagName('button')[0];
+            //this[_goEl] = this.container.getElementsByTagName('button')[0];
         }
 
-        //绑定事件
+        /**
+         * 绑定事件
+         */
         bindEvents() {
             super.bindEvents();
-            //将click事件存起来，便于销毁，防止内存泄露
-            if (!this.eventsMap.has('click')) {
-                this.eventsMap.set('click', new Map());
-            }
-            let clickMap = this.eventsMap.get('click');
-            clickMap.set(this[_preEl], this.previous.bind(this));//上一页
-            clickMap.set(this[_nextEl], this.next.bind(this));//下一页
+
+            this.addEvent('click',this[_preEl],this.previous.bind(this));//上一页
+            this.addEvent('click',this[_nextEl],this.next.bind(this));//下一页
             //跳转页
-            clickMap.set(this[_goEl], (()=> {
-                let value = Number(this[_toPageEl].value);
-                if (isNaN(value)) {
-                    alert('输入参数类型错误！');
-                }
-                else if (value > this[_pageNum] || value < 1) {
-                    alert("输入参数不在区间");
-                }
-                else {
+            this.addEvent('focus keyup input', this[_toPageEl], el=> {
+                let value = Number(el.target.value);
+                if (isNaN(value) || value > this[_pageNum] || value < 1) {
+                    el.target.classList.add('error');
+                }else {
+                    el.target.classList.remove('error');
                     this.currentPage = value - 1;
                 }
-            }).bind(this));
-            //绑定set中的所有事件
+            });
+            this.addEvent('blur', this[_toPageEl], el=>el.target.classList.remove('error'));//失去焦点式恢复
+            //绑定map中的所有事件
             this._bindMapEvents();
         }
 
-        //设置当前页
+        /**
+         * 设置当前页
+         * @param pageNum
+         */
         set
         currentPage(pageNum) {
             if (typeof pageNum !== 'number') throw  new TypeError("页码必须为Number！");
@@ -87,28 +98,41 @@ var PagingGrid = (()=> {
             this._firePageChanged(pageNum);
         }
 
-        //获取当前页
+        /**
+         * 获取当前页
+         * @returns {*}
+         */
         get
         currentPage() {
             return this[_currentPage];
         }
 
-        //设置最大页数
+        /**
+         * 设置最大页数
+         * @param maxNum
+         */
         set
         pageNum(maxNum) {
             if (typeof maxNum !== 'number') throw  new TypeError("页码必须为Number！");
             if (maxNum < 0) throw new RangeError("最大页面数不能小于0！");
             this[_pageNum] = maxNum;
+            this[_currentPage] = 0;
             this.render();
         }
 
-        //返回最大页数
+        /**
+         * 返回最大页数
+         * @returns {*}
+         */
         get
         pageNum() {
             return this[_pageNum];
         }
 
-        //下一页
+        /**
+         * 下一页
+         * @returns {number}
+         */
         next() {
             if (this[_currentPage] + 1 < this[_pageNum]) {
                 return this.currentPage += 1;
@@ -116,7 +140,10 @@ var PagingGrid = (()=> {
             return -1;
         }
 
-        //上一页
+        /**
+         * 上一页
+         * @returns {number}
+         */
         previous() {
             if (this[_currentPage] > 0) {
                 return this.currentPage -= 1;
@@ -124,14 +151,23 @@ var PagingGrid = (()=> {
             return -1;
         }
 
-        //当页面改变时触发，提醒grid更新界面
+        /**
+         * 当页面改变时触发，提醒grid更新界面
+         * @private
+         */
         _firePageChanged() {
             this.grid.render();
             this.render();
         }
 
         destory() {
+            super.destory();
 
+            this.grid = null;
+            this[_pageStateEl] = null;
+            this[_preEl] = null;
+            this[_nextEl] = null;
+            this[_toPageEl] = null;
         }
     }
 

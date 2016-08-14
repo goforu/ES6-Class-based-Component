@@ -6,24 +6,24 @@ var Store = (()=> {
     'use strict';
 
     let _rawDataArr = Symbol();//原始数据
-    let _sortedDataArr = Symbol();//排序后数据
+    let _resultDataArr = Symbol();//排序、过滤处理后的最终数据
 
     return class Store {
 
         constructor(dataArr = []) {
             this[_rawDataArr] = dataArr;
-            this[_sortedDataArr] = [];
+            this[_resultDataArr] = [];
             this._sortByColumn();
         }
 
         /**
          * 获取分隔数据，与分页对应，默认每个单位为10
          * @param index 第几个单位
-         * @param unit 数据单位数量
+         * @param unit 数据单位数量 0表示全部返回
          * @returns {Array.<{}>} 相应数据
          */
-        getUnitArray(index = 0, unit = 10) {
-            return this[_sortedDataArr].slice(index * unit, (index + 1) * unit);
+        getUnitArray(index = 0, unit = 0) {
+            return unit === 0 ? this[_resultDataArr] : this[_resultDataArr].slice(index * unit, (index + 1) * unit);
         }
 
         /**
@@ -32,7 +32,7 @@ var Store = (()=> {
          * @returns {number} 页数
          */
         getMaxUnitNum(unit = 10/*number*/) {
-            return Math.ceil(this[_sortedDataArr].length / unit);
+            return Math.ceil(this[_resultDataArr].length / unit);
         }
 
         /**
@@ -45,10 +45,11 @@ var Store = (()=> {
 
         /**
          * 清空数据
+         * @param which 清空哪个，默认全部
          */
-        clearDataArray() {
-            this[_rawDataArr].splice(0, this[_rawDataArr].length - 1);
-            this[_sortedDataArr].splice(0, this[_sortedDataArr].length - 1);
+        clearDataArray(which) {
+            (which == 1 || !which) && this[_rawDataArr].splice(0, this[_rawDataArr].length);
+            (which == 2 || !which) && this[_resultDataArr].splice(0, this[_resultDataArr].length);
         }
 
         /**
@@ -66,14 +67,14 @@ var Store = (()=> {
          */
         sortByColumns(sortOpts) {
             //清空数据
-            this[_sortedDataArr].splice(0, this[_sortedDataArr].length);
+            this[_resultDataArr].splice(0, this[_resultDataArr].length);
             //将数据替换为排序后数据
-            this[_sortedDataArr].push(...this._sortByColumn(sortOpts, 0, this[_rawDataArr]));
+            this[_resultDataArr].push(...this._sortByColumn(sortOpts, 0, this[_rawDataArr]));
         }
 
         /**
          * 递归，依据优先级排序
-         * @param sortOpts 排序列，优先级从左到右，格式为[{2:true},{1:false},...]
+         * @param sortOpts 排序规则，优先级从左到右，格式为[{2:true},{1:false},...]
          * @param current 当前排序的优先级位
          * @param arrs 待排序数组
          * @returns {*} 排序完成数组
@@ -120,9 +121,22 @@ var Store = (()=> {
             return resultArr;
         }
 
-        destory(){
+        /**
+         * 以关键字过滤，对应grid的search方法
+         * @param keywords
+         */
+        filterByKeywords(keywords/*string*/) {
+            let regexp = new RegExp(`^${keywords}`);
+            let filterRlt = this[_resultDataArr].filter(e=>e.filter(m=>regexp.test(m)).length);
+            //清空resultDataArr
+            this.clearDataArray(2);
+            //压入结果
+            this[_resultDataArr].push(...filterRlt);
+        }
+
+        destory() {
             this[_rawDataArr] = null;
-            this[_sortedDataArr] = null;
+            this[_resultDataArr] = null;
         }
     }
 

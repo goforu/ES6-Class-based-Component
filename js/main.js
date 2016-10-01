@@ -49,7 +49,7 @@ function genRandomData(count) {
         let row = [];
         for (let j = 0; j < 6; j++) {
             let r = '';
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < base.length; i++) {
                 r += base[Math.floor(Math.random() * 3)];
             }
             row.push(r);

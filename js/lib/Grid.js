@@ -46,7 +46,6 @@ var Grid = (()=> {
                 } else if (this.sortOpts[i][index] === true) {
                     //若为升序，则去掉排序
                     this.sortOpts.splice(i, 1);
-                    return undefined;
                 }
             }
             //若未排序，则降序
@@ -144,7 +143,7 @@ var Grid = (()=> {
             super.bindEvents();
             //点击列名，返回被点列序号
             for (let i = 0; i < this[_thEls].length; i++) {
-                this.addEvent('click', this[_thEls][i], ((()=> {
+                this.addEvent('click', this[_thEls][i], (()=> {
                     let index = i;
                     return ()=> {
                         //点击后排序状态
@@ -163,7 +162,7 @@ var Grid = (()=> {
                         //排序完成后，重新渲染页面
                         this.render();
                     };
-                })()).bind(this));
+                })());
             }
             //触发搜索
             this.addEvent('keyup input', this[_searchEl], e=> {

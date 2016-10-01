@@ -48,8 +48,8 @@ var Store = (()=> {
          * @param which 清空哪个，默认全部
          */
         clearDataArray(which) {
-            (which == 1 || !which) && this[_rawDataArr].splice(0, this[_rawDataArr].length);
-            (which == 2 || !which) && this[_resultDataArr].splice(0, this[_resultDataArr].length);
+            if(which == 1 || !which) this[_rawDataArr].length = 0;
+            if(which == 2 || !which) this[_resultDataArr].length = 0;
         }
 
         /**
@@ -67,7 +67,7 @@ var Store = (()=> {
          */
         sortByColumns(sortOpts) {
             //清空数据
-            this[_resultDataArr].splice(0, this[_resultDataArr].length);
+            this[_resultDataArr].length = 0;
             //将数据替换为排序后数据
             this[_resultDataArr].push(...this._sortByColumn(sortOpts, 0, this[_rawDataArr]));
         }
@@ -126,7 +126,9 @@ var Store = (()=> {
          * @param keywords
          */
         filterByKeywords(keywords/*string*/) {
-            let regexp = new RegExp(`^${keywords}`);
+            //替换正则特殊字符
+            var regWords = keywords.replace(/[\[\]*?{}()~.\\|$^+]/g, matched => '\\' + matched);
+            let regexp = new RegExp(`^${regWords}`);
             let filterRlt = this[_resultDataArr].filter(e=>e.filter(m=>regexp.test(m)).length);
             //清空resultDataArr
             this.clearDataArray(2);
